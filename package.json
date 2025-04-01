@@ -1,5 +1,5 @@
 {
-  "name": "GDM",
+  "name": "gdm",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-navigation/native": "^7.0.19",
     "react": "19.0.0",
     "react-native": "0.78.1",
     "react-native-splash-screen": "^3.3.0"
@@ -18,7 +19,7 @@
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
-    "@react-native-community/cli": "15.0.1",
+    "@react-native-community/cli": "latest",
     "@react-native-community/cli-platform-android": "15.0.1",
     "@react-native-community/cli-platform-ios": "15.0.1",
     "@react-native/babel-preset": "0.78.1",
@@ -36,5 +37,18 @@
   },
   "engines": {
     "node": ">=18"
-  }
+  },
+  "description": "This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gbsw-prometheus/GDM-Frontend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gbsw-prometheus/GDM-Frontend/issues"
+  },
+  "homepage": "https://github.com/gbsw-prometheus/GDM-Frontend#readme"
 }
