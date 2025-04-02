@@ -9,10 +9,16 @@ import {
 } from 'react-native';
 import InputField from '../../components/common/InputField';
 import CustomButton from '../../components/common/CustomButton';
+import {validateSignup} from '../../utils';
+import useForm from '../../hooks/useForm';
 
 function SignupScreen() {
   const passwordRef = useRef<TextInput | null>(null);
   const passwordConfirmRef = useRef<TextInput | null>(null);
+  const signup = useForm({
+    initialValue: {email: '', password: '', passwordConfirm: ''},
+    validate: validateSignup,
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -30,10 +36,13 @@ function SignupScreen() {
             <InputField
               autoFocus
               placeholder="이메일"
+              error={signup.erros.email}
+              touched={signup.touched.email}
               inputMode="email"
               returnKeyType="next"
               blurOnSubmit={false}
               onSubmitEditing={() => passwordRef.current?.focus()}
+              {...signup.getTextInputProps('email')}
             />
           </View>
 
@@ -43,10 +52,13 @@ function SignupScreen() {
               ref={passwordRef}
               placeholder="비밀번호"
               textContentType="oneTimeCode"
+              error={signup.erros.password}
+              touched={signup.touched.password}
               secureTextEntry
               returnKeyType="next"
               blurOnSubmit={false}
               onSubmitEditing={() => passwordConfirmRef.current?.focus()}
+              {...signup.getTextInputProps('password')}
             />
           </View>
 
@@ -55,7 +67,11 @@ function SignupScreen() {
             <InputField
               ref={passwordConfirmRef}
               placeholder="비밀번호 확인"
+              error={signup.erros.passwordConfirm}
+              touched={signup.touched.passwordConfirm}
               secureTextEntry
+              // onSubmitEditing={handleSubmit}
+              {...signup.getTextInputProps('passwordConfirm')}
             />
           </View>
 
