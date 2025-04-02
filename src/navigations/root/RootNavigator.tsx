@@ -7,7 +7,7 @@ function RootNavigator() {
   // const {isLogin} = useAuth();
   const isLogin = false;
 
-  return <>{isLogin ? <AuthHomeScreen /> : <SignupScreen />}</>;
+  return <>{isLogin ? <SignupScreen /> : <LoginScreen />}</>;
 }
 
 export default RootNavigator;
