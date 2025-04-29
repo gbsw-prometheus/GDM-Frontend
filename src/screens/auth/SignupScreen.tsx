@@ -16,7 +16,14 @@ function SignupScreen() {
   const passwordRef = useRef<TextInput | null>(null);
   const passwordConfirmRef = useRef<TextInput | null>(null);
   const signup = useForm({
-    initialValue: {email: '', password: '', passwordConfirm: ''},
+    initialValue: {
+      name: '',
+      roomNum: '',
+      birth: '',
+      yearOfAdmission: '',
+      password: '',
+      passwordConfirm: '',
+    },
     validate: validateSignup,
   });
 
@@ -35,14 +42,52 @@ function SignupScreen() {
           <View style={styles.inputContainer}>
             <InputField
               autoFocus
-              placeholder="이메일"
-              error={signup.erros.email}
-              touched={signup.touched.email}
-              inputMode="email"
+              placeholder="이름"
+              error={signup.errors.name}
+              touched={signup.touched.name}
+              inputMode="text"
               returnKeyType="next"
               blurOnSubmit={false}
               onSubmitEditing={() => passwordRef.current?.focus()}
-              {...signup.getTextInputProps('email')}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <InputField
+              autoFocus
+              placeholder="방번호"
+              error={signup.errors.roomNum}
+              touched={signup.touched.roomNum}
+              inputMode="numeric"
+              returnKeyType="next"
+              blurOnSubmit={false}
+              onSubmitEditing={() => passwordRef.current?.focus()}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <InputField
+              autoFocus
+              placeholder="생년월일"
+              error={signup.errors.birth}
+              touched={signup.touched.birth}
+              inputMode="text"
+              returnKeyType="next"
+              blurOnSubmit={false}
+              onSubmitEditing={() => passwordRef.current?.focus()}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <InputField
+              autoFocus
+              placeholder="입학년도"
+              error={signup.errors.yearOfAdmission}
+              touched={signup.touched.yearOfAdmission}
+              inputMode="text"
+              returnKeyType="next"
+              blurOnSubmit={false}
+              onSubmitEditing={() => passwordRef.current?.focus()}
             />
           </View>
 
@@ -52,7 +97,7 @@ function SignupScreen() {
               ref={passwordRef}
               placeholder="비밀번호"
               textContentType="oneTimeCode"
-              error={signup.erros.password}
+              error={signup.errors.password}
               touched={signup.touched.password}
               secureTextEntry
               returnKeyType="next"
@@ -67,7 +112,7 @@ function SignupScreen() {
             <InputField
               ref={passwordConfirmRef}
               placeholder="비밀번호 확인"
-              error={signup.erros.passwordConfirm}
+              error={signup.errors.passwordConfirm}
               touched={signup.touched.passwordConfirm}
               secureTextEntry
               // onSubmitEditing={handleSubmit}
@@ -98,7 +143,7 @@ const styles = StyleSheet.create({
   logoContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: Dimensions.get('window').height * 0.4,
+    height: Dimensions.get('window').height * 0.2,
   },
   logo: {
     width: 120,
