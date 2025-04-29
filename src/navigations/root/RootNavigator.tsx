@@ -1,13 +1,13 @@
 import React from 'react';
-import AuthHomeScreen from '../../screens/auth/AuthHomeScreen';
-import LoginScreen from '../../screens/auth/LoginScreen';
-import SignupScreen from '../../screens/auth/SignupScreen';
+import AuthStackNavigator from '../stack/AuthStackNavigator';
+import MainTabNavigator from '../tab/MainTabNavigator';
+// import useAuth from '../../hooks/useAuth';
 
 function RootNavigator() {
   // const {isLogin} = useAuth();
-  const isLogin = false;
+  const isLogin = true;
 
-  return <>{isLogin ? <SignupScreen /> : <LoginScreen />}</>;
+  return <>{isLogin ? <MainTabNavigator /> : <AuthStackNavigator />}</>;
 }
 
 export default RootNavigator;

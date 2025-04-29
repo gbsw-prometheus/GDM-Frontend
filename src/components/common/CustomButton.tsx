@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.GREEN,
   },
   outlined: {
-    borderColor: colors.GREEN,
+    borderColor: colors.WHITE,
     borderWidth: 1,
   },
   filledPressed: {
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     color: colors.WHITE,
   },
   outlinedText: {
-    color: colors.GREEN,
+    color: colors.WHITE,
   },
 });
 

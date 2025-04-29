@@ -1,19 +1,42 @@
 type UserInformation = {
-  email: string;
+  name: string;
+  roomNum: string;
+  birth: string;
+  yearOfAdmission: string;
   password: string;
 };
 
 function validateUser(values: UserInformation) {
   const errors = {
-    email: '',
+    name: '',
     password: '',
+    roomNum: '',
+    birth: '',
+    yearOfAdmission: '',
   };
 
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
-    errors.email = '올바른 이메일 형식이 아닙니다.';
+  if (!values.name.trim()) {
+    errors.name = '이름은 필수입니다.';
   }
+
   if (!(values.password.length > 7 && values.password.length < 21)) {
     errors.password = '비밀번호는 8 ~ 20자 사이로 입력해주세요.';
+  }
+
+  if (!/^\d+$/.test(values.roomNum)) {
+    errors.roomNum = '방번호는 숫자만 입력 가능합니다.';
+  }
+
+  if (values.roomNum.length < 1 || values.roomNum.length > 3) {
+    errors.roomNum = '방번호는 1 ~ 3자리 숫자여야 합니다.';
+  }
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(values.birth)) {
+    errors.birth = '생년월일은 YYYY-MM-DD 형식으로 입력해주세요.';
+  }
+
+  if (!/^\d{4}$/.test(values.yearOfAdmission)) {
+    errors.yearOfAdmission = '입학년도는 4자리 숫자로 입력해주세요.';
   }
 
   return errors;

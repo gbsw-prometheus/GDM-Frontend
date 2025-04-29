@@ -8,7 +8,7 @@ interface UseFormProps<T> {
 function useForm<T>({initialValue, validate}: UseFormProps<T>) {
   const [values, setValues] = useState(initialValue);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const [erros, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChangeText = (name: keyof T, text: string) => {
     setValues({
@@ -37,7 +37,7 @@ function useForm<T>({initialValue, validate}: UseFormProps<T>) {
     setErrors(newErrors);
   }, [validate, values]);
 
-  return {values, erros, touched, getTextInputProps};
+  return {values, errors, touched, getTextInputProps};
 }
 
 export default useForm;
