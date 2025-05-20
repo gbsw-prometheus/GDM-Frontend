@@ -152,7 +152,6 @@ const StatusHomeScreen: React.FC<StatusHomeScreenProps> = ({navigation}) => {
             scrollEnabled={false}
           />
         </View>
-
         <View style={styles.section}>
           <SectionHeader
             title="외출/외박 현황"
