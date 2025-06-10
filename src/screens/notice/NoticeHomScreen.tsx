@@ -1,52 +1,66 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, Button } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { colors, mainNavigations } from '../../constants';
 import NoticeWriteScreen from './NoticeWriteScreen';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { NoticeStackParamList } from '../../navigations/stack/NoticeStackNavigator';
-
-export type NoticeHomeParamList = {
-  NoticeHomScreen: undefined;
-  NoticeWriteScreen: undefined;
-};
 
 type NoticeItemProps = {
   id: number;
   content: string;
 };
 
+const noticeData: NoticeItemProps[] = [
+  { id: 1, content: '오후 2시부터 2시 30분까지 출석체크 하세요!' },
+  { id: 2, content: '205호 학생 전부 내려오세요.' },
+  { id: 3, content: '점심시간은 2시까지!!' },
+  { id: 4, content: '금일 청소는 203, 305, 402호입니다.' },
+  { id: 5, content: '금일 체육관 사용가능합니다.' },
+  { id: 6, content: '유진승 학생 사감실로 오세요.' },
+  { id: 7, content: '박준호 학생 출석체크하세요!!' },
+  { id: 8, content: '저녁식사 하러 가세요!!' },
+  { id: 9, content: '성홍제 학생 모범학생으로 상점 200점 발급!!' },
+  { id: 10, content: '206, 302, 402, 405, 410호 소등하세요.' },
+];
+
 const NoticeItem: React.FC<NoticeItemProps> = ({ content }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
     <View style={styles.itemWrapper}>
-      <View style={styles.itemContainer}>
-        <View style={styles.iconContainer}>
-          <Text style={styles.icon}>📢</Text>
-        </View>
+      <TouchableOpacity
+        style={styles.itemContainer}
+        onPress={toggleExpand}
+      >
         <View style={styles.infoContainer}>
           <Text style={styles.name}>{content}</Text>
         </View>
-      </View>
+        <Image
+          source={isExpanded ? require('../../assets/top-arrow.png') : require('../../assets/down-arrow.png')}
+          style={styles.arrowIcon}
+        />
+      </TouchableOpacity>
+      {isExpanded && (
+        <View style={styles.expandedContent}>
+          <Text style={styles.expandedText}>{content}</Text>
+        </View>
+      )}
     </View>
   );
 };
 
-const noticeData = [
-  { id: 1, content: '오후 2시부터 2시 30분까지 출석체크 하세요!' },
-  { id: 2, content: '205호 학생 전부 내려오세요.' },
-  { id: 3, content: '점심시간은 2시까지!!' },
-  { id: 4, content: '점심시간은 2시까지!!' },
-  { id: 5, content: '점심시간은 2시까지!!' },
-  { id: 6, content: '점심시간은 2시까지!!' },
-  { id: 7, content: '점심시간은 2시까지!!' },
-  { id: 8, content: '점심시간은 2시까지!!' },
-  { id: 9, content: '점심시간은 2시까지!!' },
-  { id: 10, content: '점심시간은 2시까지!!' },
-];
-
-function NoticeHomScreen({ navigation }: NativeStackScreenProps<NoticeStackParamList, typeof mainNavigations.NOTICE_HOME>) {
-  const [user, setUser] = useState('admin'); // user 또는 admin으로 변경하여 테스트하세용
+const NoticeHomeScreen: React.FC = () => {
+  const [user, setUser] = useState<'user' | 'admin'>('user');
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('recent');
   const [items, setItems] = useState([
@@ -68,59 +82,27 @@ function NoticeHomScreen({ navigation }: NativeStackScreenProps<NoticeStackParam
                 setValue={setValue}
                 setItems={setItems}
                 style={styles.selectStyle}
-                zIndex={3000}
-                zIndexInverse={1000}
+                dropDownContainerStyle={styles.selectStyle}
               />
             </View>
             <FlatList
-              data={value === 'recent' ? noticeData : [...noticeData].reverse()}
-              renderItem={({item}) => (
+              data={noticeData}
+              renderItem={({ item }) => (
                 <NoticeItem id={item.id} content={item.content} />
               )}
-              keyExtractor={item => item.id.toString()}
+              keyExtractor={(item) => item.id.toString()}
               ItemSeparatorComponent={() => <View style={styles.separator} />}
             />
           </>
         ) : (
           <>
-            <View style={styles.selectContainer}>
-              <DropDownPicker
-                open={open}
-                value={value}
-                items={items}
-                setOpen={setOpen}
-                setValue={setValue}
-                setItems={setItems}
-                style={styles.selectStyle}
-                zIndex={3000}
-                zIndexInverse={1000}
-              />
-            </View>
-            {/* <FlatList
-              data={value === 'recent' ? noticeData : [...noticeData].reverse()}
-              renderItem={({item}) => (
-                <NoticeItem id={item.id} content={item.content} />
-              )}
-              keyExtractor={item => item.id.toString()}
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
-            /> */}
-            <View style={styles.noticeButtonContainer}>
-              <View style={styles.noticeButton}>
-                <Button
-                  title="공지사항 쓰기"
-                  color={'#fff'}
-                  onPress={() => {
-                    navigation.navigate('NoticeWriteScreen');
-                  }}
-                />
-              </View>
-            </View>
+            <NoticeWriteScreen />
           </>
         )}
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -140,7 +122,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     marginBottom: 20,
-    height: 20,
   },
   selectStyle: {
     width: '100%',
@@ -167,14 +148,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 16,
   },
-  iconContainer: {
-    marginRight: 12,
-  },
-  icon: {
-    width: 24,
-    height: 24,
-    resizeMode: 'contain',
-  },
   infoContainer: {
     flex: 1,
   },
@@ -187,21 +160,22 @@ const styles = StyleSheet.create({
   separator: {
     height: 8,
   },
-  adminSeparator: {
-    height: 1
-  },
-  noticeButtonContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  noticeButton: {
-    backgroundColor: `${colors.GREEN}`,
-    padding: 8,
+  expandedContent: {
+    backgroundColor: '#fff',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     borderRadius: 5,
-    alignItems: 'center',
-    width: 330,
-  }
+  },
+  expandedText: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '500',
+  },
+  arrowIcon: {
+    width: 24,
+    height: 24,
+    resizeMode: 'contain',
+  },
 });
 
-export default NoticeHomScreen;
+export default NoticeHomeScreen;
