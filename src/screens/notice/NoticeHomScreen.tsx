@@ -17,16 +17,16 @@ type NoticeItemProps = {
 };
 
 const noticeData: NoticeItemProps[] = [
-  { id: 1, content: '오후 2시부터 2시 30분까지 출석체크 하세요!' },
-  { id: 2, content: '205호 학생 전부 내려오세요.' },
-  { id: 3, content: '점심시간은 2시까지!!' },
-  { id: 4, content: '금일 청소는 203, 305, 402호입니다.' },
-  { id: 5, content: '금일 체육관 사용가능합니다.' },
-  { id: 6, content: '유진승 학생 사감실로 오세요.' },
-  { id: 7, content: '박준호 학생 출석체크하세요!!' },
-  { id: 8, content: '저녁식사 하러 가세요!!' },
-  { id: 9, content: '성홍제 학생 모범학생으로 상점 200점 발급!!' },
-  { id: 10, content: '206, 302, 402, 405, 410호 소등하세요.' },
+  {id: 1, content: '오후 2시부터 2시 30분까지 출석체크 하세요!'},
+  {id: 2, content: '205호 학생 전부 내려오세요.'},
+  {id: 3, content: '점심시간은 2시까지!!'},
+  {id: 4, content: '금일 청소는 203, 305, 402호입니다.'},
+  {id: 5, content: '금일 체육관 사용가능합니다.'},
+  {id: 6, content: '유진승 학생 사감실로 오세요.'},
+  {id: 7, content: '박준호 학생 출석체크하세요!!'},
+  {id: 8, content: '저녁식사 하러 가세요!!'},
+  {id: 9, content: '성홍제 학생 모범학생으로 상점 200점 발급!!'},
+  {id: 10, content: '206, 302, 402, 405, 410호 소등하세요.'},
 ];
 
 const NoticeItem: React.FC<NoticeItemProps> = ({ content }) => {
