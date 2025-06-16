@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, { useRef } from 'react';
 import {
   Dimensions,
   Image,
@@ -7,22 +7,34 @@ import {
   View,
   Text,
   TextInput,
+  Pressable,
 } from 'react-native';
 import CustomButton from '../../components/common/CustomButton';
 import InputField from '../../components/common/InputField';
 import useForm from '../../hooks/useForm';
-import {validateLogin} from '../../utils';
+import { validateLogin } from '../../utils';
+import { StackScreenProps } from '@react-navigation/stack';
+import { AuthStackParamList } from '../../navigations/stack/AuthStackNavigator';
+import { authNavigations } from '../../constants/navigations';
 
-function LoginScreen() {
+type LoginScreenProps = StackScreenProps<AuthStackParamList, typeof authNavigations.LOGIN>;
+
+function LoginScreen({ navigation }: LoginScreenProps) {
+  const birthRef = useRef<TextInput | null>(null);
   const passwordRef = useRef<TextInput | null>(null);
 
   const login = useForm({
     initialValue: {
-      email: '',
+      name: '',
+      birth: '',
       password: '',
     },
     validate: validateLogin,
   });
+
+  const handleSubmit = () => {
+    console.log('로그인 시도:', login.values);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -39,14 +51,26 @@ function LoginScreen() {
           <View style={styles.inputContainer}>
             <InputField
               autoFocus
-              placeholder="이메일"
-              error={login.erros.email}
-              touched={login.touched.email}
-              inputMode="email"
+              placeholder="이름"
+              error={login.errors.name}
+              touched={login.touched.name}
+              inputMode="text"
               returnKeyType="next"
-              blurOnSubmit={false}
+              onSubmitEditing={() => birthRef.current?.focus()}
+              {...login.getTextInputProps('name')}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <InputField
+              ref={birthRef}
+              placeholder="생년월일 (YYYY-MM-DD)"
+              error={login.errors.birth}
+              touched={login.touched.birth}
+              inputMode="text"
+              returnKeyType="next"
               onSubmitEditing={() => passwordRef.current?.focus()}
-              {...login.getTextInputProps('email')}
+              {...login.getTextInputProps('birth')}
             />
           </View>
 
@@ -54,22 +78,28 @@ function LoginScreen() {
             <InputField
               ref={passwordRef}
               placeholder="비밀번호"
-              error={login.erros.password}
+              error={login.errors.password}
               touched={login.touched.password}
               secureTextEntry
-              returnKeyType="join"
+              returnKeyType="done"
               blurOnSubmit={false}
-              // onSubmitEditing={handleSubmit}
+              onSubmitEditing={handleSubmit}
               {...login.getTextInputProps('password')}
             />
           </View>
 
           <View style={styles.buttonContainer}>
-            <CustomButton label="로그인" variant="filled" size="large" />
+            <CustomButton
+              label="로그인"
+              variant="filled"
+              size="large"
+              onPress={handleSubmit}
+            />
           </View>
 
           <View style={styles.helpTextContainer}>
-            <Text style={styles.helpText}>아직 학생 인증을 안하셨나요?</Text>
+            <Pressable onPress={() => navigation.navigate(authNavigations.SIGNUP)}>
+            </Pressable>
           </View>
         </View>
       </View>
@@ -112,6 +142,7 @@ const styles = StyleSheet.create({
   helpText: {
     color: '#888',
     fontSize: 14,
+    textDecorationLine: 'underline', // Added to indicate clickable text
   },
 });
 

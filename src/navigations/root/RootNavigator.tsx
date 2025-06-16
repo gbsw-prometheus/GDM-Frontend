@@ -5,7 +5,7 @@ import MainTabNavigator from '../tab/MainTabNavigator';
 
 function RootNavigator() {
   // const {isLogin} = useAuth();
-  const isLogin = true;
+  const isLogin = false;
 
   return <>{isLogin ? <MainTabNavigator /> : <AuthStackNavigator />}</>;
 }
