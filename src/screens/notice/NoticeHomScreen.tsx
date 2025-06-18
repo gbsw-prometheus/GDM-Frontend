@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import DropDownPicker from 'react-native-dropdown-picker';
 import NoticeWriteScreen from './NoticeWriteScreen';
 
@@ -29,7 +29,7 @@ const noticeData: NoticeItemProps[] = [
   {id: 10, content: '206, 302, 402, 405, 410호 소등하세요.'},
 ];
 
-const NoticeItem: React.FC<NoticeItemProps> = ({ content }) => {
+const NoticeItem: React.FC<NoticeItemProps> = ({content}) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpand = () => {
@@ -38,15 +38,16 @@ const NoticeItem: React.FC<NoticeItemProps> = ({ content }) => {
 
   return (
     <View style={styles.itemWrapper}>
-      <TouchableOpacity
-        style={styles.itemContainer}
-        onPress={toggleExpand}
-      >
+      <TouchableOpacity style={styles.itemContainer} onPress={toggleExpand}>
         <View style={styles.infoContainer}>
           <Text style={styles.name}>{content}</Text>
         </View>
         <Image
-          source={isExpanded ? require('../../assets/top-arrow.png') : require('../../assets/down-arrow.png')}
+          source={
+            isExpanded
+              ? require('../../assets/top-arrow.png')
+              : require('../../assets/down-arrow.png')
+          }
           style={styles.arrowIcon}
         />
       </TouchableOpacity>
@@ -64,8 +65,8 @@ const NoticeHomeScreen: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('recent');
   const [items, setItems] = useState([
-    { label: '최신순', value: 'recent' },
-    { label: '오래된순', value: 'old' },
+    {label: '최신순', value: 'recent'},
+    {label: '오래된순', value: 'old'},
   ]);
 
   return (
@@ -87,10 +88,10 @@ const NoticeHomeScreen: React.FC = () => {
             </View>
             <FlatList
               data={noticeData}
-              renderItem={({ item }) => (
+              renderItem={({item}) => (
                 <NoticeItem id={item.id} content={item.content} />
               )}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={item => item.id.toString()}
               ItemSeparatorComponent={() => <View style={styles.separator} />}
             />
           </>
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
   itemWrapper: {
     backgroundColor: '#fff',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.2,
     shadowRadius: 5,
     elevation: 3,

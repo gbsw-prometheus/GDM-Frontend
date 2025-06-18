@@ -1,10 +1,10 @@
 import React from 'react';
 import {Dimensions, Image, SafeAreaView, StyleSheet, View} from 'react-native';
 import {colors} from '../../constants';
-import CustomButton from '../../components/common/CustomButton'; 
+import CustomButton from '../../components/common/CustomButton';
 import {AuthStackParamList} from '../../navigations/stack/AuthStackNavigator';
 import {authNavigations} from '../../constants/navigations';
-import { StackScreenProps } from '@react-navigation/stack';
+import {StackScreenProps} from '@react-navigation/stack';
 
 type AuthHomeScreenProps = StackScreenProps<
   AuthStackParamList,
@@ -33,7 +33,7 @@ function AuthHomeScreen({navigation}: AuthHomeScreenProps) {
             label="회원가입하기"
             variant="filled"
             size="large"
-             onPress={() => navigation.navigate(authNavigations.SIGNUP)}
+            onPress={() => navigation.navigate(authNavigations.SIGNUP)}
           />
         </View>
       </SafeAreaView>
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     margin: 30,
   },
   imageContainer: {
-    flex: 2, 
+    flex: 2,
     width: Dimensions.get('screen').width / 3,
   },
   image: {

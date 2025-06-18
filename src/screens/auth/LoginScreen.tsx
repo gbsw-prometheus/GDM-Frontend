@@ -1,27 +1,23 @@
-import React, { useRef } from 'react';
+import React, {useRef} from 'react';
 import {
-  Dimensions,
-  Image,
   SafeAreaView,
   StyleSheet,
-  View,
-  Text,
   TextInput,
-  Pressable,
+  View,
+  Dimensions,
+  Image,
 } from 'react-native';
-import CustomButton from '../../components/common/CustomButton';
 import InputField from '../../components/common/InputField';
+import CustomButton from '../../components/common/CustomButton';
 import useForm from '../../hooks/useForm';
-import { validateLogin } from '../../utils';
-import { StackScreenProps } from '@react-navigation/stack';
-import { AuthStackParamList } from '../../navigations/stack/AuthStackNavigator';
-import { authNavigations } from '../../constants/navigations';
+import {validateLogin} from '../../utils/validate';
+import useAuth from '../../hooks/queries/useAuth';
 
-type LoginScreenProps = StackScreenProps<AuthStackParamList, typeof authNavigations.LOGIN>;
-
-function LoginScreen({ navigation }: LoginScreenProps) {
+function LoginScreen() {
   const birthRef = useRef<TextInput | null>(null);
   const passwordRef = useRef<TextInput | null>(null);
+
+  const {loginMutation} = useAuth();
 
   const login = useForm({
     initialValue: {
@@ -33,8 +29,31 @@ function LoginScreen({ navigation }: LoginScreenProps) {
   });
 
   const handleSubmit = () => {
-    console.log('로그인 시도:', login.values);
+    loginMutation.mutate(login.values);
   };
+
+  // const handleSubmit = () => {
+  //   loginMutation.mutate(login.values, {
+  //     onSuccess: () => {
+  //       Alert.alert('로그인 성공');
+  //     },
+  //     onError: error => {
+  //       let errorMsg = '';
+  //       if (error.response) {
+  //         errorMsg += `response: ${JSON.stringify(error.response, null, 2)}\n`;
+  //       }
+  //       if (error.request) {
+  //         errorMsg += `request: ${JSON.stringify(error.request, null, 2)}\n`;
+  //       }
+  //       if (error.message) {
+  //         errorMsg += `message: ${error.message}\n`;
+  //       }
+  //       errorMsg += `stringify: ${JSON.stringify(error, null, 2)}`;
+
+  //       Alert.alert('로그인 실패(상세)', errorMsg);
+  //     },
+  //   });
+  // };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -46,7 +65,6 @@ function LoginScreen({ navigation }: LoginScreenProps) {
             source={require('../../assets/green-logo.png')}
           />
         </View>
-
         <View style={styles.formContainer}>
           <View style={styles.inputContainer}>
             <InputField
@@ -56,24 +74,24 @@ function LoginScreen({ navigation }: LoginScreenProps) {
               touched={login.touched.name}
               inputMode="text"
               returnKeyType="next"
+              blurOnSubmit={false}
               onSubmitEditing={() => birthRef.current?.focus()}
               {...login.getTextInputProps('name')}
             />
           </View>
-
           <View style={styles.inputContainer}>
             <InputField
               ref={birthRef}
-              placeholder="생년월일 (YYYY-MM-DD)"
+              placeholder="생년월일 (YYYY/MM/DD)"
               error={login.errors.birth}
               touched={login.touched.birth}
               inputMode="text"
               returnKeyType="next"
+              blurOnSubmit={false}
               onSubmitEditing={() => passwordRef.current?.focus()}
               {...login.getTextInputProps('birth')}
             />
           </View>
-
           <View style={styles.inputContainer}>
             <InputField
               ref={passwordRef}
@@ -87,7 +105,6 @@ function LoginScreen({ navigation }: LoginScreenProps) {
               {...login.getTextInputProps('password')}
             />
           </View>
-
           <View style={styles.buttonContainer}>
             <CustomButton
               label="로그인"
@@ -95,11 +112,6 @@ function LoginScreen({ navigation }: LoginScreenProps) {
               size="large"
               onPress={handleSubmit}
             />
-          </View>
-
-          <View style={styles.helpTextContainer}>
-            <Pressable onPress={() => navigation.navigate(authNavigations.SIGNUP)}>
-            </Pressable>
           </View>
         </View>
       </View>
@@ -134,15 +146,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 30,
     marginBottom: 20,
-  },
-  helpTextContainer: {
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  helpText: {
-    color: '#888',
-    fontSize: 14,
-    textDecorationLine: 'underline', // Added to indicate clickable text
   },
 });
 
