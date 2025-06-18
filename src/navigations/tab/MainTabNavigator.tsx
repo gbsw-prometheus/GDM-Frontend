@@ -7,13 +7,11 @@ import {RouteProp} from '@react-navigation/native';
 import HomeStackNavigator from '../stack/HomeStackNavigator';
 import NoticeStackNavigator from '../stack/NoticeStackNavigator';
 import StatusStackNavigator from '../stack/StatusStackNavigator';
-import AuthStackNavigator from '../stack/AuthStackNavigator';
 
 export type StatusTabParamList = {
   [mainTabNavigations.HOME]: undefined;
   [mainTabNavigations.NOTICE_HOME]: undefined;
   [mainTabNavigations.STATUS_HOME]: undefined;
-  [mainTabNavigations.PROFILE_HOME]: undefined;
 };
 
 const Tab = createBottomTabNavigator<StatusTabParamList>();
@@ -34,9 +32,6 @@ function TabBarIcons(
       break;
     case mainTabNavigations.STATUS_HOME:
       iconName = focused ? 'list' : 'list-outline';
-      break;
-    case mainTabNavigations.PROFILE_HOME:
-      iconName = focused ? 'person' : 'person-outline';
       break;
   }
 
@@ -100,14 +95,6 @@ function MainTabNavigator() {
         options={{
           headerShown: false,
           tabBarLabel: '현황판',
-        }}
-      />
-      <Tab.Screen
-        name={mainTabNavigations.PROFILE_HOME}
-        component={AuthStackNavigator}
-        options={{
-          headerShown: false,
-          tabBarLabel: '프로필',
         }}
       />
     </Tab.Navigator>

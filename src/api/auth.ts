@@ -1,57 +1,44 @@
-import { getEncryptStorage } from '../utils';
 import axiosInstance from './axios';
 
-type RequestUser = {
-    name: string;
-    password: string;
-    roomNum?: number;
-    birth?: string;
-    yearOfAdmission?: number;
+// 회원가입 요청 타입
+export type SignupRequest = {
+  name: string;
+  password: string;
+  roomNum: number;
+  birth: string; // "YYYY/MM/DD"
+  yearOfAdmission: number;
 };
 
-const postSignup = async ({name, password, roomNum, birth, yearOfAdmission}: RequestUser): Promise<void> => {
-  const {data} = await axiosInstance.post('/auth/join', {
-    name,
-    password,
-    roomNum,
-    birth,
-    yearOfAdmission,
-  });
+// 로그인 요청 타입
+export type LoginRequest = {
+  name: string;
+  password: string;
+  birth: string; // "YYYY/MM/DD"
+};
+
+// 회원가입
+export const postSignup = async (body: SignupRequest): Promise<void> => {
+  const {data} = await axiosInstance.post('/api/auth/join', body);
 
   return data;
 };
 
-type ResponseToken = {
-  accessToken: string;
-  refreshToken: string;
-};
-
-const postLogin = async ({
+// 로그인
+export const postLogin = async ({
   name,
   password,
-}: RequestUser): Promise<ResponseToken> => {
-  const {data} = await axiosInstance.post('/auth/login', {
+  birth,
+}: LoginRequest): Promise<void> => {
+  const {data} = await axiosInstance.post('/api/auth/login', {
     name,
     password,
+    birth,
   });
-
   return data;
 };
 
-const getAccessToken = async (): Promise<ResponseToken> => {
-  const refreshToken = await getEncryptStorage('refreshToken');
-  const {data} = await axiosInstance.get('/auth/refresh', {
-    headers: {
-      Authorization: `Bearer ${refreshToken}`,
-    },
-  });
-
+export const getProfile = async () => {
+  const {data} = await axiosInstance.get('/api/auth/users');
+  // 실제 프로필이 여러 명일 경우, 첫 번째 사용자만 반환하거나 원하는 방식으로 가공
   return data;
 };
-
-const logout = async () => {
-  await axiosInstance.post('/auth/logout');
-};
-
-export {postSignup, postLogin, getAccessToken, logout};
-export type {RequestUser, ResponseToken };

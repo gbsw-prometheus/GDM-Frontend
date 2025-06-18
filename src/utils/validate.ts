@@ -31,8 +31,8 @@ function validateUser(values: UserInformation) {
     errors.roomNum = '방번호는 1 ~ 3자리 숫자여야 합니다.';
   }
 
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(values.birth)) {
-    errors.birth = '생년월일은 YYYY-MM-DD 형식으로 입력해주세요.';
+  if (!/^\d{4}\/\d{2}\/\d{2}$/.test(values.birth)) {
+    errors.birth = '생년월일은 YYYY/MM/DD 형식으로 입력해주세요.';
   }
 
   if (!/^\d{4}$/.test(values.yearOfAdmission)) {
@@ -57,8 +57,8 @@ function validateLogin(values: UserLogin) {
     errors.name = '이름은 필수입니다.';
   }
 
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(values.birth)) {
-    errors.birth = '생년월일은 YYYY-MM-DD 형식으로 입력해주세요.';
+  if (!/^\d{4}\/\d{2}\/\d{2}$/.test(values.birth)) {
+    errors.birth = '생년월일은 YYYY/MM/DD 형식으로 입력해주세요.';
   }
 
   if (!(values.password.length > 7 && values.password.length < 21)) {
@@ -68,9 +68,9 @@ function validateLogin(values: UserLogin) {
   return errors;
 }
 
-function validateSignup(values: UserInformation & { passwordConfirm: string }) {
+function validateSignup(values: UserInformation & {passwordConfirm: string}) {
   const errors = validateUser(values);
-  const signupErrors = { ...errors, passwordConfirm: '' };
+  const signupErrors = {...errors, passwordConfirm: ''};
 
   if (values.password !== values.passwordConfirm) {
     signupErrors.passwordConfirm = '비밀번호가 일치하지 않습니다.';
@@ -79,7 +79,7 @@ function validateSignup(values: UserInformation & { passwordConfirm: string }) {
   return signupErrors;
 }
 
-function validateAddPost(values: { title: string }) {
+function validateAddPost(values: {title: string}) {
   const errors = {
     title: '',
     description: '',
@@ -92,4 +92,4 @@ function validateAddPost(values: { title: string }) {
   return errors;
 }
 
-export { validateLogin, validateSignup, validateAddPost, validateUser };
+export {validateLogin, validateSignup, validateAddPost, validateUser};
