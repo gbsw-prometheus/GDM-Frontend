@@ -8,7 +8,7 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import useMeal from '../../hooks/useMeal';
+import useMeal from '../../hooks/queries/useMeal';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
