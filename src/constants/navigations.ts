@@ -4,6 +4,12 @@ const authNavigations = {
   SIGNUP: 'Signup',
 } as const;
 
+const statusNavigations = {
+  STATUS_HOME: 'StatusHome',
+  STATUS_DETAIL: 'StatusDetail',
+  GOING_DETAIL: 'GoingDetail',
+} as const;
+
 const mainNavigations = {
   STATUS_HOME: 'StatusHome',
   HOME: 'Home',
@@ -18,4 +24,9 @@ const mainTabNavigations = {
   PROFILE_HOME: 'ProfileHome',
 } as const;
 
-export {authNavigations, mainNavigations, mainTabNavigations};
+export {
+  authNavigations,
+  mainNavigations,
+  mainTabNavigations,
+  statusNavigations,
+};

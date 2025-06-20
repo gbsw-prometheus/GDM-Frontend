@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
 import {
   View,
   Text,
@@ -8,12 +8,20 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
+import useStatus from '../../hooks/queries/useStatus';
+import {statusNavigations} from '../../constants/navigations';
 
 type AbsenceData = {
   id: string;
   name: string;
-  time: string;
+  grade: number;
+  class: number;
+  number: number;
+  userId: number;
+  status: string;
 };
 
 type OutsideData = {
@@ -21,23 +29,13 @@ type OutsideData = {
   name: string;
   type: string;
   time: string;
+  userId: number;
+  outDateTime: string;
+  inDateTime: string;
+  title: string;
+  content: string;
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
 };
-
-const absenceData: AbsenceData[] = [
-  {id: '1', name: '성홍제', time: '3학년 1반 12번'},
-  {id: '2', name: '유진승', time: '3학년 1반 13번'},
-  {id: '3', name: '박준호', time: '3학년 1반 11번'},
-  {id: '4', name: '이병호', time: '3학년 1반 15번'},
-  {id: '5', name: '성홍제', time: '3학년 1반 12번'},
-];
-
-const outsideData: OutsideData[] = [
-  {id: '1', name: '성홍제', type: '외출중', time: '(16:00 ~ 19:00)'},
-  {id: '2', name: '유진승', type: '외박중', time: '(03/18 ~ 03/19)'},
-  {id: '3', name: '박준호', type: '외출중', time: '(16:00 ~ 19:00)'},
-  {id: '4', name: '이병호', type: '외출중', time: '(16:00 ~ 19:00)'},
-  {id: '5', name: '성홍제', type: '', time: '3학년 1반 12번'},
-];
 
 type StudentItemProps = {
   name: string;
@@ -75,19 +73,27 @@ type SectionHeaderProps = {
   title: string;
   count: number;
   onMorePress: () => void;
+  isLoading?: boolean;
 };
 
 const SectionHeader: React.FC<SectionHeaderProps> = ({
   title,
   count,
   onMorePress,
+  isLoading = false,
 }) => {
   return (
     <View style={styles.sectionHeader}>
       <Text style={styles.sectionTitle}>{title}</Text>
       <View style={styles.headerRight}>
-        {count > 0 && (
-          <Text style={styles.countText}>현재 {count}명 미출석</Text>
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#00C4B4" />
+        ) : (
+          count > 0 && (
+            <Text style={styles.countText}>
+              현재 {count}명 {title.includes('미출석') ? '미출석' : '외출/외박'}
+            </Text>
+          )
         )}
         <TouchableOpacity onPress={onMorePress}>
           <Text style={styles.moreText}>[더보기]</Text>
@@ -103,16 +109,81 @@ type StatusHomeScreenProps = {
 
 const StatusHomeScreen: React.FC<StatusHomeScreenProps> = ({navigation}) => {
   const [searchText, setSearchText] = useState('');
+  const {absenceListQuery, goingListQuery} = useStatus();
 
-  const filteredAbsenceData = absenceData.filter(student =>
-    student.name.includes(searchText),
-  );
-  const filteredOutsideData = outsideData.filter(student =>
-    student.name.includes(searchText),
-  );
+  // 결석자 데이터 변환 및 필터링
+  const filteredAbsenceData = useMemo(() => {
+    if (!absenceListQuery.data) return [];
+
+    return absenceListQuery.data
+      .filter((student: AbsenceData) =>
+        (student.name || '').includes(searchText),
+      )
+      .map((student: AbsenceData) => ({
+        ...student,
+        time: `${student.grade}학년 ${student.class}반 ${student.number}번`,
+      }));
+  }, [absenceListQuery.data, searchText]);
+
+  // 외출/외박 데이터 변환 및 필터링
+  const filteredOutsideData = useMemo(() => {
+    if (!goingListQuery.data) return [];
+
+    return goingListQuery.data
+      .filter(
+        (student: OutsideData) =>
+          (student.name || '').includes(searchText) &&
+          student.status === 'ACCEPTED',
+      )
+      .map((student: OutsideData) => {
+        // 날짜 포맷팅
+        const formatDateTime = (outDate: string, inDate: string) => {
+          try {
+            const outFormatted = outDate.split('T')[0];
+            const inFormatted = inDate.split('T')[0];
+
+            if (outFormatted === inFormatted) {
+              // 같은 날이면 외출
+              const outTime = outDate.split('T')[1]?.substring(0, 5) || '16:00';
+              const inTime = inDate.split('T')[1]?.substring(0, 5) || '19:00';
+              return `(${outTime} ~ ${inTime})`;
+            } else {
+              // 다른 날이면 외박
+              const outDateFormatted = outFormatted
+                .substring(5)
+                .replace('-', '/');
+              const inDateFormatted = inFormatted
+                .substring(5)
+                .replace('-', '/');
+              return `(${outDateFormatted} ~ ${inDateFormatted})`;
+            }
+          } catch (error) {
+            return '(시간 정보 없음)';
+          }
+        };
+
+        const isOvernight =
+          student.outDateTime.split('T')[0] !==
+          student.inDateTime.split('T')[0];
+
+        return {
+          ...student,
+          type: isOvernight ? '외박중' : '외출중',
+          time: formatDateTime(student.outDateTime, student.inDateTime),
+        };
+      });
+  }, [goingListQuery.data, searchText]);
 
   const displayedAbsenceData = filteredAbsenceData.slice(0, 3);
   const displayedOutsideData = filteredOutsideData.slice(0, 3);
+
+  // 새로고침 함수
+  const onRefresh = () => {
+    absenceListQuery.refetch();
+    goingListQuery.refetch();
+  };
+
+  const isRefreshing = absenceListQuery.isFetching || goingListQuery.isFetching;
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -131,52 +202,118 @@ const StatusHomeScreen: React.FC<StatusHomeScreenProps> = ({navigation}) => {
           />
         </View>
 
-        <View style={styles.section}>
-          <SectionHeader
-            title="미출석 현황"
-            count={filteredAbsenceData.length}
-            onMorePress={() =>
-              navigation.navigate('StatusDetail', {
-                data: filteredAbsenceData,
-                title: '미출석 현황',
-              })
-            }
-          />
-          <FlatList
-            data={displayedAbsenceData}
-            keyExtractor={item => item.id}
-            renderItem={({item}) => (
-              <StudentItem name={item.name} time={item.time} />
-            )}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-            scrollEnabled={false}
-          />
-        </View>
-        <View style={styles.section}>
-          <SectionHeader
-            title="외출/외박 현황"
-            count={filteredOutsideData.length}
-            onMorePress={() =>
-              navigation.navigate('StatusDetail', {
-                data: filteredOutsideData,
-                title: '외출/외박 현황',
-              })
-            }
-          />
-          <FlatList
-            data={displayedOutsideData}
-            keyExtractor={item => item.id}
-            renderItem={({item}) => (
-              <StudentItem
-                name={item.name}
-                status={item.type}
-                time={item.time}
-              />
-            )}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-            scrollEnabled={false}
-          />
-        </View>
+        <FlatList
+          data={[{key: 'content'}]}
+          keyExtractor={item => item.key}
+          renderItem={() => (
+            <View>
+              {/* 미출석 현황 섹션 */}
+              <View style={styles.section}>
+                <SectionHeader
+                  title="미출석 현황"
+                  count={filteredAbsenceData.length}
+                  isLoading={absenceListQuery.isLoading}
+                  onMorePress={() =>
+                    navigation.navigate(statusNavigations.STATUS_DETAIL, {
+                      data: filteredAbsenceData,
+                      title: '미출석 현황',
+                      type: 'absence',
+                    })
+                  }
+                />
+                {absenceListQuery.isError ? (
+                  <View style={styles.errorContainer}>
+                    <Text style={styles.errorText}>
+                      데이터를 불러오는데 실패했습니다.
+                    </Text>
+                    <TouchableOpacity
+                      style={styles.retryButton}
+                      onPress={() => absenceListQuery.refetch()}>
+                      <Text style={styles.retryButtonText}>다시 시도</Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <FlatList
+                    data={displayedAbsenceData}
+                    keyExtractor={item => item.id}
+                    renderItem={({item}) => (
+                      <StudentItem name={item.name} time={item.time} />
+                    )}
+                    ItemSeparatorComponent={() => (
+                      <View style={styles.separator} />
+                    )}
+                    scrollEnabled={false}
+                    ListEmptyComponent={
+                      !absenceListQuery.isLoading ? (
+                        <View style={styles.emptyContainer}>
+                          <Text style={styles.emptyText}>
+                            미출석 학생이 없습니다.
+                          </Text>
+                        </View>
+                      ) : null
+                    }
+                  />
+                )}
+              </View>
+
+              {/* 외출/외박 현황 섹션 */}
+              <View style={styles.section}>
+                <SectionHeader
+                  title="외출/외박 현황"
+                  count={filteredOutsideData.length}
+                  isLoading={goingListQuery.isLoading}
+                  onMorePress={() =>
+                    navigation.navigate(statusNavigations.STATUS_DETAIL, {
+                      data: filteredOutsideData,
+                      title: '외출/외박 현황',
+                      type: 'going',
+                    })
+                  }
+                />
+                {goingListQuery.isError ? (
+                  <View style={styles.errorContainer}>
+                    <Text style={styles.errorText}>
+                      데이터를 불러오는데 실패했습니다.
+                    </Text>
+                    <TouchableOpacity
+                      style={styles.retryButton}
+                      onPress={() => goingListQuery.refetch()}>
+                      <Text style={styles.retryButtonText}>다시 시도</Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <FlatList
+                    data={displayedOutsideData}
+                    keyExtractor={item => item.id}
+                    renderItem={({item}) => (
+                      <StudentItem
+                        name={item.name}
+                        status={item.type}
+                        time={item.time}
+                      />
+                    )}
+                    ItemSeparatorComponent={() => (
+                      <View style={styles.separator} />
+                    )}
+                    scrollEnabled={false}
+                    ListEmptyComponent={
+                      !goingListQuery.isLoading ? (
+                        <View style={styles.emptyContainer}>
+                          <Text style={styles.emptyText}>
+                            외출/외박 중인 학생이 없습니다.
+                          </Text>
+                        </View>
+                      ) : null
+                    }
+                  />
+                )}
+              </View>
+            </View>
+          )}
+          refreshControl={
+            <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+          }
+        />
       </View>
     </SafeAreaView>
   );
@@ -289,6 +426,34 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 8,
+  },
+  errorContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  errorText: {
+    color: '#ff6b6b',
+    fontSize: 14,
+    marginBottom: 10,
+  },
+  retryButton: {
+    backgroundColor: '#00C4B4',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 6,
+  },
+  retryButtonText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  emptyContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  emptyText: {
+    color: '#888',
+    fontSize: 14,
   },
 });
 

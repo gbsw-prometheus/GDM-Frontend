@@ -1,5 +1,5 @@
 import {useQuery} from '@tanstack/react-query';
-import {fetchMealData} from '../api/meal';
+import {fetchMealData} from '../../api/meal';
 
 function useMeal() {
   return useQuery({
