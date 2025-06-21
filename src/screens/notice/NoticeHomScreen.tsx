@@ -62,30 +62,12 @@ const NoticeItem: React.FC<NoticeItemProps> = ({content}) => {
 
 const NoticeHomeScreen: React.FC = () => {
   const [user, setUser] = useState<'user' | 'admin'>('user');
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState('recent');
-  const [items, setItems] = useState([
-    {label: '최신순', value: 'recent'},
-    {label: '오래된순', value: 'old'},
-  ]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {user === 'user' ? (
           <>
-            <View style={styles.selectContainer}>
-              <DropDownPicker
-                open={open}
-                value={value}
-                items={items}
-                setOpen={setOpen}
-                setValue={setValue}
-                setItems={setItems}
-                style={styles.selectStyle}
-                dropDownContainerStyle={styles.selectStyle}
-              />
-            </View>
             <FlatList
               data={noticeData}
               renderItem={({item}) => (
