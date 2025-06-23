@@ -1,18 +1,20 @@
 import React from 'react';
-import {mainNavigations} from '../../constants';
 import {createStackNavigator} from '@react-navigation/stack';
-import HomeScreen from '../../screens/home/HomeScreen';
-export type HomeStackParamList = {
+import AttendanceScreen from '../../screens/attendance/AttendancdScreen';
+import {mainNavigations} from '../../constants';
+
+export type AttendanceStackParamList = {
   [mainNavigations.HOME]: undefined;
+  [mainNavigations.ATTENDANCE]: undefined;
   [mainNavigations.NOTICE_HOME]: undefined;
   [mainNavigations.STATUS_HOME]: undefined;
   [mainNavigations.PROFILE_HOME]: undefined;
-  [mainNavigations.ATTENDANCE]: undefined;
+  AttendanceScreen: undefined;
 };
 
-const Stack = createStackNavigator<HomeStackParamList>();
+const Stack = createStackNavigator<AttendanceStackParamList>();
 
-function HomeStackNavigator() {
+function AttendanceStackNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -29,15 +31,14 @@ function HomeStackNavigator() {
         headerTintColor: 'black',
       }}>
       <Stack.Screen
-        name={mainNavigations.HOME}
-        component={HomeScreen}
+        name={mainNavigations.ATTENDANCE}
+        component={AttendanceScreen}
         options={{
-          headerTitle: ' ',
-          headerShown: false,
+          headerTitle: '출석 체크',
         }}
       />
     </Stack.Navigator>
   );
 }
 
-export default HomeStackNavigator;
+export default AttendanceStackNavigator;

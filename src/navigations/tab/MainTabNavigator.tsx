@@ -7,11 +7,13 @@ import {RouteProp} from '@react-navigation/native';
 import HomeStackNavigator from '../stack/HomeStackNavigator';
 import NoticeStackNavigator from '../stack/NoticeStackNavigator';
 import StatusStackNavigator from '../stack/StatusStackNavigator';
+import AttendanceStackNavigator from '../stack/AttendanceNavigator';
 
 export type StatusTabParamList = {
   [mainTabNavigations.HOME]: undefined;
   [mainTabNavigations.NOTICE_HOME]: undefined;
   [mainTabNavigations.STATUS_HOME]: undefined;
+  [mainTabNavigations.ATTENDANCE]: undefined;
 };
 
 const Tab = createBottomTabNavigator<StatusTabParamList>();
@@ -32,6 +34,9 @@ function TabBarIcons(
       break;
     case mainTabNavigations.STATUS_HOME:
       iconName = focused ? 'list' : 'list-outline';
+      break;
+    case mainTabNavigations.ATTENDANCE:
+      iconName = focused ? 'checkmark-done' : 'checkmark-done-outline';
       break;
   }
 
@@ -87,6 +92,14 @@ function MainTabNavigator() {
         options={{
           headerShown: false,
           tabBarLabel: '공지사항',
+        }}
+      />
+      <Tab.Screen
+        name={mainTabNavigations.ATTENDANCE}
+        component={AttendanceStackNavigator}
+        options={{
+          headerShown: false,
+          tabBarLabel: '출석',
         }}
       />
       <Tab.Screen
