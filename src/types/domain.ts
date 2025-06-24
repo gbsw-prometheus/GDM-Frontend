@@ -19,4 +19,17 @@ interface Profile {
   loginType: 'email' | 'kakao' | 'apple';
 }
 
-export type {ImageUri, Post, Profile};
+interface User {
+  id: number;
+  name: string;
+  roomNum: number;
+  role: 'TEACHER' | 'STUDENT';
+  attendance: null | any;
+  noAttendance: any[];
+  goingApply: any[];
+  birth: string;
+  yearOfAdmission: string;
+  isGraduate: boolean;
+}
+
+export type {ImageUri, Post, Profile, User};

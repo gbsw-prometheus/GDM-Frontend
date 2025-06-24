@@ -40,5 +40,13 @@ export const postLogin = async ({
 export const getProfile = async () => {
   const {data} = await axiosInstance.get('/api/auth/users');
   // 실제 프로필이 여러 명일 경우, 첫 번째 사용자만 반환하거나 원하는 방식으로 가공
+  
   return data;
 };
+
+export const getUser = async () => {
+  const {data} = await axiosInstance.get('/api/auth/user');
+  // 실제 프로필이 여러 명일 경우, 첫 번째 사용자만 반환하거나 원하는 방식으로 가공
+  
+  return data;
+}

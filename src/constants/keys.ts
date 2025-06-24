@@ -9,6 +9,7 @@ const queryKeys = {
   GET_ABSENCE_LIST: 'getAbsenceList',
   GET_GOING_LIST: 'getGoingList',
   GET_GOING_DETAIL: 'getGoingDetail',
+  GET_USER: 'getUser',
 } as const;
 
 export {queryKeys};

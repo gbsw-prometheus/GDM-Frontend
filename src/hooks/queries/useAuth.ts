@@ -1,7 +1,7 @@
-import {useMutation, useQuery} from '@tanstack/react-query';
-import {postSignup, postLogin, getProfile} from '../../api/auth';
-import {queryKeys} from '../../constants';
-import {UseMutationCustomOptions} from '../../types';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { postSignup, postLogin, getProfile, getUser } from '../../api/auth';
+import { queryKeys } from '../../constants';
+import { UseMutationCustomOptions, User } from '../../types';
 import queryClient from '../../api/queryClient';
 
 function useSignup(mutationOptions?: UseMutationCustomOptions) {
@@ -37,17 +37,31 @@ function useGetProfile() {
   });
 }
 
+function useGetUser() {
+  return useQuery({
+    queryKey: [queryKeys.AUTH, queryKeys.GET_USER],
+    queryFn: getUser,
+    retry: false,
+  });
+}
+
 function useAuth() {
   const signupMutation = useSignup();
   const loginMutation = useLogin();
   const getProfileQuery = useGetProfile();
+  const getsUser = useGetUser()
   const isLogin = getProfileQuery.isSuccess;
+  const user = getProfileQuery.data as User | undefined;
+  const role = getsUser.data?.role; // 'TEACHER' | 'STUDENT' | undefined
 
   return {
     signupMutation,
     loginMutation,
     isLogin,
-    getProfileQuery,
+    user,
+    role,
+    isLoading: getProfileQuery.isLoading,
+    error: getProfileQuery.error,
   };
 }
 

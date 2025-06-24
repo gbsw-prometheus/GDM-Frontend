@@ -39,8 +39,8 @@ function validateUser(values: UserInformation) {
     errors.yearOfAdmission = '입학년도는 4자리 숫자로 입력해주세요.';
   }
 
-  if (!(values.password.length > 7 && values.password.length < 21)) {
-    errors.password = '비밀번호는 8 ~ 20자 사이로 입력해주세요.';
+  if (!(values.password.length > 3 && values.password.length < 21)) {
+    errors.password = '비밀번호는 4 ~ 20자 사이로 입력해주세요.';
   }
 
   return errors;
@@ -61,16 +61,16 @@ function validateLogin(values: UserLogin) {
     errors.birth = '생년월일은 YYYY/MM/DD 형식으로 입력해주세요.';
   }
 
-  if (!(values.password.length > 7 && values.password.length < 21)) {
-    errors.password = '비밀번호는 8 ~ 20자 사이로 입력해주세요.';
+  if (!(values.password.length > 3 && values.password.length < 21)) {
+    errors.password = '비밀번호는 4 ~ 20자 사이로 입력해주세요.';
   }
 
   return errors;
 }
 
-function validateSignup(values: UserInformation & {passwordConfirm: string}) {
+function validateSignup(values: UserInformation & { passwordConfirm: string }) {
   const errors = validateUser(values);
-  const signupErrors = {...errors, passwordConfirm: ''};
+  const signupErrors = { ...errors, passwordConfirm: '' };
 
   if (values.password !== values.passwordConfirm) {
     signupErrors.passwordConfirm = '비밀번호가 일치하지 않습니다.';
@@ -79,7 +79,7 @@ function validateSignup(values: UserInformation & {passwordConfirm: string}) {
   return signupErrors;
 }
 
-function validateAddPost(values: {title: string}) {
+function validateAddPost(values: { title: string }) {
   const errors = {
     title: '',
     description: '',
@@ -92,4 +92,4 @@ function validateAddPost(values: {title: string}) {
   return errors;
 }
 
-export {validateLogin, validateSignup, validateAddPost, validateUser};
+export { validateLogin, validateSignup, validateAddPost, validateUser };

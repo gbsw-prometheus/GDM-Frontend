@@ -1,5 +1,4 @@
-// screens/NoticeHomeScreen.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,10 +9,10 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import DropDownPicker from 'react-native-dropdown-picker';
 import NoticeWriteScreen from './NoticeWriteScreen';
 import { useNotice } from '../../hooks/useNotice';
 import { Notification } from '../../types';
+import useAuth from '../../hooks/queries/useAuth';
 
 const NoticeItem: React.FC<Notification> = ({ title, detail }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -47,12 +46,12 @@ const NoticeItem: React.FC<Notification> = ({ title, detail }) => {
 };
 
 const NoticeHomeScreen: React.FC = () => {
-  const [user, setUser] = useState<'user' | 'admin'>('user');
+  const { role, isLoading: authLoading } = useAuth();
   const { getAllNotifications, isLoading, error, errorDetails } = useNotice();
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
-    if (user === 'user') {
+    if (role === 'STUDENT') {
       const fetchNotifications = async () => {
         try {
           const response = await getAllNotifications();
@@ -68,12 +67,16 @@ const NoticeHomeScreen: React.FC = () => {
 
       fetchNotifications();
     }
-  }, [user, getAllNotifications, error, errorDetails]);
+  }, [role, getAllNotifications, error, errorDetails]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        {user === 'user' ? (
+        {authLoading ? (
+          <Text style={styles.loadingText}>로딩 중...</Text>
+        ) : role === 'TEACHER' ? (
+          <NoticeWriteScreen />
+        ) : (
           <>
             {isLoading && <Text style={styles.loadingText}>로딩 중...</Text>}
             {error && <Text style={styles.errorText}>{error}</Text>}
@@ -96,8 +99,6 @@ const NoticeHomeScreen: React.FC = () => {
               />
             )}
           </>
-        ) : (
-          <NoticeWriteScreen />
         )}
       </View>
     </SafeAreaView>

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  Image, // Import the Image component
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../../constants';
@@ -18,7 +19,6 @@ const AttendanceScreen: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await axiosInstance.post('/api/attendance/check');
-
       const attendanceData = response.data;
 
       Alert.alert(
@@ -66,7 +66,11 @@ const AttendanceScreen: React.FC = () => {
           {isLoading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.buttonText}>출석 체크</Text>
+            <Image
+              source={require('../../assets/white-logo.png')} // Use require for local images
+              style={styles.buttonImage}
+              resizeMode="contain" // Adjust how the image fits
+            />
           )}
         </TouchableOpacity>
       </View>
@@ -85,36 +89,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
-  },
   button: {
     backgroundColor: colors.GREEN,
-    width: 200,
-    height: 200,
-    borderRadius: 100,
+    width: 220,
+    height: 220,
+    borderRadius: 110,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   buttonDisabled: {
     backgroundColor: '#999',
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: '600',
-  },
-  attendanceInfo: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  infoText: {
-    fontSize: 16,
-    color: '#333',
-    marginVertical: 4,
+  buttonImage: {
+    width: 150, // Adjust size as needed
+    height: 150, // Adjust size as needed
+    tintColor: '#fff', // Optional: tint the image white if needed
   },
 });
 
