@@ -16,6 +16,7 @@ const mainNavigations = {
   NOTICE_HOME: 'NoticeHome',
   PROFILE_HOME: 'ProfileHome',
   ATTENDANCE: 'Attendance',
+  OUTING: 'Outing',
 } as const;
 
 const mainTabNavigations = {
@@ -24,6 +25,7 @@ const mainTabNavigations = {
   NOTICE_HOME: 'NoticeHome',
   PROFILE_HOME: 'ProfileHome',
   ATTENDANCE: 'Attendance',
+  OUTING_HOME: 'OutingHome',
 } as const;
 
 export {

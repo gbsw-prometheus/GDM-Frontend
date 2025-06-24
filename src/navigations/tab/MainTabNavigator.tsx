@@ -8,12 +8,14 @@ import HomeStackNavigator from '../stack/HomeStackNavigator';
 import NoticeStackNavigator from '../stack/NoticeStackNavigator';
 import StatusStackNavigator from '../stack/StatusStackNavigator';
 import AttendanceStackNavigator from '../stack/AttendanceNavigator';
+import OutingStackNavigator from '../stack/OutingNavigator';
 
 export type StatusTabParamList = {
   [mainTabNavigations.HOME]: undefined;
   [mainTabNavigations.NOTICE_HOME]: undefined;
   [mainTabNavigations.STATUS_HOME]: undefined;
   [mainTabNavigations.ATTENDANCE]: undefined;
+  [mainTabNavigations.OUTING_HOME]: undefined;
 };
 
 const Tab = createBottomTabNavigator<StatusTabParamList>();
@@ -37,6 +39,9 @@ function TabBarIcons(
       break;
     case mainTabNavigations.ATTENDANCE:
       iconName = focused ? 'checkmark-done' : 'checkmark-done-outline';
+      break;
+    case mainTabNavigations.OUTING_HOME:
+      iconName = focused ? 'exit' : 'exit-outline';
       break;
   }
 
@@ -100,6 +105,14 @@ function MainTabNavigator() {
         options={{
           headerShown: false,
           tabBarLabel: '출석',
+        }}
+      />
+      <Tab.Screen
+        name={mainTabNavigations.OUTING_HOME}
+        component={OutingStackNavigator}
+        options={{
+          headerShown: false,
+          tabBarLabel: '외출/외박 신청',
         }}
       />
       <Tab.Screen

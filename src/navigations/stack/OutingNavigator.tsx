@@ -1,21 +1,21 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import AttendanceScreen from '../../screens/attendance/AttendancdScreen';
+import OutingScreen from '../../screens/outing/OutingScreen';
 import {mainNavigations} from '../../constants';
 
-export type AttendanceStackParamList = {
+export type OutingStackParamList = {
   [mainNavigations.HOME]: undefined;
   [mainNavigations.ATTENDANCE]: undefined;
   [mainNavigations.NOTICE_HOME]: undefined;
   [mainNavigations.STATUS_HOME]: undefined;
   [mainNavigations.PROFILE_HOME]: undefined;
   [mainNavigations.OUTING]: undefined;
-  AttendanceScreen: undefined;
+  OutingScreen: undefined;
 };
 
-const Stack = createStackNavigator<AttendanceStackParamList>();
+const Stack = createStackNavigator<OutingStackParamList>();
 
-function AttendanceStackNavigator() {
+function OutingStackNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -32,14 +32,14 @@ function AttendanceStackNavigator() {
         headerTintColor: 'black',
       }}>
       <Stack.Screen
-        name={mainNavigations.ATTENDANCE}
-        component={AttendanceScreen}
+        name={mainNavigations.OUTING}
+        component={OutingScreen}
         options={{
-          headerTitle: '출석 체크',
+          headerTitle: '외출/외박 신청',
         }}
       />
     </Stack.Navigator>
   );
 }
 
-export default AttendanceStackNavigator;
+export default OutingStackNavigator;

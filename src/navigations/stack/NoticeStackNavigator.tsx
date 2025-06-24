@@ -10,6 +10,7 @@ export type NoticeStackParamList = {
   [mainNavigations.STATUS_HOME]: undefined;
   [mainNavigations.PROFILE_HOME]: undefined;
   [mainNavigations.ATTENDANCE]: undefined;
+  [mainNavigations.OUTING]: undefined;
   NoticeWriteScreen: undefined;
 };
 

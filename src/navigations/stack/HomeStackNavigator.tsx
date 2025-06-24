@@ -8,6 +8,7 @@ export type HomeStackParamList = {
   [mainNavigations.STATUS_HOME]: undefined;
   [mainNavigations.PROFILE_HOME]: undefined;
   [mainNavigations.ATTENDANCE]: undefined;
+  [mainNavigations.OUTING]: undefined;
 };
 
 const Stack = createStackNavigator<HomeStackParamList>();

@@ -9,6 +9,8 @@ export type StatusStackParamList = {
   [mainNavigations.NOTICE_HOME]: undefined;
   [mainNavigations.STATUS_HOME]: undefined;
   [mainNavigations.PROFILE_HOME]: undefined;
+  [mainNavigations.ATTENDANCE]: undefined;
+  [mainNavigations.OUTING]: undefined;
   [statusNavigations.STATUS_DETAIL]: {
     data: any[];
     title: string;
